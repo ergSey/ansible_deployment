@@ -1,18 +1,20 @@
 ---
 - hosts: ubuntu
   become: True
+  
+  vars:
+    ip_add_priv: 172.20.80.100/24
+    gw_priv: 192.168.59.144
+    dest_net_conf: /etc/netplan/00-installer-config.yaml
+    src_net_conf: ./00-installer-config.j2
 
   tasks:
-     - name: "Getting inetfaces info"
+     - name: "Getting devices info"
        shell: ip link | grep ens | cut -d':' -f 2 | sed -e 's/ //' 
        register: adapters
 
-     - name: "Network interface names"
-       debug: 
-        var: adapters.stdout_lines
-
      - name: "Set network configuration"
-       template: src=./00-installer-config.j2 dest=/etc/netplan/00-installer-config.yaml mode=644 owner=root group=root
+       template: src={{src_net_conf}} dest={{dest_net_conf}} mode=644 owner=root group=root
        notify: Apply network configuration
 
   handlers:
