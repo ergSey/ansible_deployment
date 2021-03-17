@@ -1,0 +1,21 @@
+---
+- hosts: ubuntu
+  become: True
+
+  tasks:
+     - name: "Getting inetfaces info"
+       shell: ip link | grep ens | cut -d':' -f 2 | sed -e 's/ //' 
+       register: adapters
+
+     - name: "Network interface names"
+       debug: 
+        var: adapters.stdout_lines
+
+     - name: "Set network configuration"
+       template: src=./00-installer-config.j2 dest=/etc/netplan/00-installer-config.yaml mode=644 owner=root group=root
+       notify: Apply network configuration
+
+  handlers:
+  - name: "Apply network configuration"
+    shell: netplan apply
+...

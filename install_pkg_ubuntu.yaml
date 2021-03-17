@@ -1,0 +1,16 @@
+---
+- hosts: ubuntu
+  become: True
+
+  vars: 
+   packages: ['vim','iotop','tcpdump','redis-server','net-tools','iptables-persistent']
+
+  tasks:
+   - name: Install packages on Ubuntu
+     apt:
+       name: "{{ packages }}"
+       state: present
+       update_cache: True
+   - debug:
+       var: ansible_distribution
+...
