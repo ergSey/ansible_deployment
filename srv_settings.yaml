@@ -1,0 +1,47 @@
+---
+- hosts: ubuntu 
+  become: True
+
+  tasks:
+    - name: "Provide root permissions to previleged group"
+      lineinfile:
+            dest: /etc/sudoers.d/privileged
+            regexp: '^'
+            insertafter: EOF
+            line: '%privileged ALL=(ALL) ALL'
+            create: yes
+            state: present
+
+    - name: "ssh/sftp server configuration"
+      lineinfile:
+            dest: /etc/ssh/sshd_config 
+            regexp: "{{ item.regexp }}"
+            insertafter: EOF
+            line: "{{ item.line }}"
+      with_items:
+        - { regexp: '#Port 22', line: 'Port 58257'}
+        - { regexp: '#PubkeyAuthentication yes', line: 'PubkeyAuthentication yes'}
+        - { regexp: 'PasswordAuthentication yes', line: 'PasswordAuthentication no'}
+      notify: Restart sshd.service
+
+    - name: "Redis server configuration"
+      lineinfile:
+            dest: /etc/redis/redis.conf
+            regexp: "{{ item.regexp }}"
+            insertafter: EOF
+            line: "{{ item.line }}"
+      with_items:
+        - { regexp: 'supervised no', line: 'supervised systemd'}
+        - { regexp: 'bind 127.0.0.1 ::1', line: 'bind 0.0.0.0'}
+      notify: Restart redis.service
+
+  handlers:
+    - name: Restart sshd.service
+      service:
+        name: sshd
+        state: restarted
+    - name: Restart redis.service
+      service:
+        name: redis
+        state: restarted
+...
