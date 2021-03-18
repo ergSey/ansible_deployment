@@ -1,18 +1,15 @@
 ---
-- hosts: ubuntu
+- hosts: ubuntu 
   become: True
   
   vars_files:
       - ./userlist.yaml
 
   tasks:
-     - name: "The previleged existing checking"
-       shell: cat /etc/group | grep privileged
-       register: stdout
-
+     
      - name: "The previleged group creating"
        shell: groupadd privileged
-       when: stdout == ''
+       ignore_errors: yes
 
      - name: "The users creating"
        user:
@@ -22,8 +19,15 @@
          comment: "{{ item.comments }}"
          shell: "{{ item.shell }}"
          password: "{{ item.hash }}"
-         generate_ssh_key: yes
          state: present
          update_password: always
        with_items: "{{ user_details }}"
+
+     - name: Deploy SSH Key
+       authorized_key:
+         user: "{{ item.name }}"
+         key: "{{ lookup('file', './pubkeys/{{ item.name }}_id_rsa.pub') }}"
+         state: present
+       with_items: "{{ user_details }}"
+
 ...
