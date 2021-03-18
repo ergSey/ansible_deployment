@@ -1,0 +1,6 @@
+user_details:
+  - {name: 'sergey.petrov', uid: 1002 , groups: ['privileged'], comments: 'Director of Finance', shell: '/bin/bash', password: 'GraJn3445#', hash: '$6$5J0ZnOqwd5$64Lvx/26fmZuEFwnijBWxW0D8GO7OlA1HgJdU7RlYcPCtkWwuFilao4/e/eqL/TTRrYfwIIP00AJCE1NtQKLE1'}
+  - {name: 'viktor.nikiforov', uid: 1003 , groups: ['privileged'], comments: 'Junior Accountant', shell: '/bin/bash', password: 'Koln@jH432', hash: '$6$uNQ2DyKE38$9c0v05CqDReLXpWJfclWMCaBXRZXJgUXAlkq0VcECLeX6C7DES0z7E3yL0..yhSNd5Ntbahiz30b6Y89XkM.f/'}
+  - {name: 'andrey.yudashev', uid: 1004 , groups: ['privileged'], comments: 'Senior Engineer', shell: '/bin/bash', password: 'HolKn342%e', hash: '$6$VC5mQcTtqXZ9Vei$dVnjJJetxG4fsqDo9JXw/SLl6/RTvxFbS//YZp6uAk66hxElOencu5S19iNVZgxICBa59.6P9FOIYs7e0ZpSW.'}
+  - {name: 'vladimir.ershov', uid: 1005 , groups: ['privileged'], comments: 'IT Specialist', shell: '/bin/bash', password: '*754HGJjjs', hash: '$6$HAWDcrKQE4WbG$ZPsxrBMUyz3HamVyrD7TDHVW6zOPvqRevfr14Abu9T9esIOWj5sM6YJvoC1hQe38xTfp0fQP5Bvj6nNgoIBA21'}
+  - {name: 'sftpuser', uid: 1006 , groups: [], comments: 'SFTP user account', shell: '/usr/lib/openssh/sftp-server', password: '*75fg6jJes', hash: '$6$Z418pzoIpDSjh0n$zwAl4LxW4p9xQG76cNqOkDxVHCpH5p7u.ojPHFbT5A/L0D2qYX3QKvidmfo5ZzwAgoJMAPc1MEhkx.oMU7Qge.'}
