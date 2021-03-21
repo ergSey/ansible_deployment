@@ -1,0 +1,8 @@
+ssh_service_configuration:
+    - { regexp: '#Port 22', line: 'Port 58257'}
+    - { regexp: '#PubkeyAuthentication yes', line: 'PubkeyAuthentication yes'}
+    - { regexp: 'PasswordAuthentication yes', line: 'PasswordAuthentication no'}
+#
+#redis_configuration:
+#    - { regexp: 'supervised no', line: 'supervised systemd'}
+#    - { regexp: 'bind 127.0.0.1 ::1', line: 'bind 0.0.0.0'}
