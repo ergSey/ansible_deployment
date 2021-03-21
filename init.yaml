@@ -1,5 +1,4 @@
 ---
-
 - name: Initial Linux Configuration
   hosts: all 
   become: True
