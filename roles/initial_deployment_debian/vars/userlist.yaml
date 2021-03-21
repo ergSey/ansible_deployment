@@ -1,3 +1,4 @@
+# This file should be encrypted by ansible-vault in production environment
 user_details:
   - {name: 'sergey.petrov', uid: 1002 , groups: ['privileged'], comments: 'Director of Finance', shell: '/bin/bash', password: 'GraJn3445#', hash: '$6$5J0ZnOqwd5$64Lvx/26fmZuEFwnijBWxW0D8GO7OlA1HgJdU7RlYcPCtkWwuFilao4/e/eqL/TTRrYfwIIP00AJCE1NtQKLE1'}
   - {name: 'viktor.nikiforov', uid: 1003 , groups: ['privileged'], comments: 'Junior Accountant', shell: '/bin/bash', password: 'Koln@jH432', hash: '$6$uNQ2DyKE38$9c0v05CqDReLXpWJfclWMCaBXRZXJgUXAlkq0VcECLeX6C7DES0z7E3yL0..yhSNd5Ntbahiz30b6Y89XkM.f/'}
