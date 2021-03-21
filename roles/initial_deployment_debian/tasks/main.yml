@@ -39,13 +39,10 @@
   notify: Apply network configuration
 
 - name: "Provide root permissions to previleged group"
-  lineinfile:
-        dest: /etc/sudoers.d/privileged
-        regexp: '^'
-        insertafter: EOF
-        line: '%privileged ALL=(ALL) ALL'
-        create: yes
-        state: present
+  copy:
+    dest: "/etc/sudoers.d/privileged"
+    content: |
+      %privileged ALL=(ALL) ALL
 
 - name: "ssh/sftp server configuration"
   lineinfile:
