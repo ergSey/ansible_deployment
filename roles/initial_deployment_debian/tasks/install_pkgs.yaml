@@ -1,0 +1,30 @@
+---
+# tasks file for initial_deployment
+
+- name: Install packages on Ubuntu
+  block:
+    - name: Install common packages
+      apt:
+       name: "{{ packages }}"
+       state: present
+       update_cache: True
+    - name: Install certain packages
+      apt:
+       name: ["redis-server", "iptables-persistent"]
+       state: present
+       update_cache: True
+  when: ansible_os_family == "Debian"
+
+- name: Install packages on Redhat
+  block:
+    - name: Install common packages
+      yum:
+       name: "{{ packages }}"
+       state: present
+       update_cache: True
+    - name: Install certain packages
+      yum:
+       name: "redis"
+       state: present
+       update_cache: True
+  when: ansible_os_family == "RedHat"

@@ -1,0 +1,10 @@
+---
+# tasks file for initial_deployment
+- name: "Redis server configuration"
+  lineinfile:
+        dest: /etc/redis/redis.conf
+        regexp: "{{ item.regexp }}"
+        insertafter: EOF
+        line: "{{ item.line }}"
+  with_items: "{{ redis_configuration }}"
+  notify: Restart redis.service

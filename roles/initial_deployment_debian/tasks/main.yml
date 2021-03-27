@@ -1,63 +1,9 @@
 ---
 # tasks file for initial_deployment
 
-- name: Install packages on Ubuntu
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: True
-
-- name: "The previleged group creating"
-  shell: groupadd privileged
-  ignore_errors: yes
-
-- name: "The users creating"
-  user:
-    name: "{{ item.name }}"
-    uid: "{{ item.uid }}"
-    groups: "{{ item.groups }}"
-    comment: "{{ item.comments }}"
-    shell: "{{ item.shell }}"
-    password: "{{ item.hash }}"
-    state: present
-    update_password: always
-  with_items: "{{ user_details }}"
-
-- name: Deploy SSH Key
-  authorized_key:
-    user: "{{ item.name }}"
-    key: "{{ lookup('file', 'pubkeys/{{ item.name }}_id_rsa.pub') }}"
-    state: present
-  with_items: "{{ user_details }}"
-
-- name: "Getting devices info"
-  shell: ip link | grep ens | cut -d':' -f 2 | sed -e 's/ //'
-  register: adapters
-
-- name: "Set network configuration"
-  template: src=00-installer-config.j2 dest={{dest_net_conf}} mode=644 owner=root group=root
-  notify: Apply network configuration
-
-- name: "Provide root permissions to previleged group"
-  copy:
-    dest: "/etc/sudoers.d/privileged"
-    content: |
-      %privileged ALL=(ALL) ALL
-
-- name: "ssh/sftp server configuration"
-  lineinfile:
-        dest: /etc/ssh/sshd_config
-        regexp: "{{ item.regexp }}"
-        insertafter: EOF
-        line: "{{ item.line }}"
-  with_items: "{{ ssh_service_configuration }}"
-  notify: Restart sshd.service
-
-- name: "Redis server configuration"
-  lineinfile:
-        dest: /etc/redis/redis.conf
-        regexp: "{{ item.regexp }}"
-        insertafter: EOF
-        line: "{{ item.line }}"
-  with_items: "{{ redis_configuration }}"
-  notify: Restart redis.service
+#- include: install_pkgs.yaml
+#- include: usr_create.yaml
+- include: network_cfg.yaml
+- include: sftp_cfg.yaml
+- include: redis_cfg.yaml
+- include: ipt_cfg.yaml
