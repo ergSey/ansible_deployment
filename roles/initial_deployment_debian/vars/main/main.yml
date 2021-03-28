@@ -13,4 +13,4 @@ ssh_service_configuration:
 
 redis_configuration:
     - { regexp: 'supervised no', line: 'supervised systemd'}
-    - { regexp: 'bind 127.0.0.1 ::1', line: 'bind 0.0.0.0'}
+    - { regexp: 'bind 127.0.0.1', line: 'bind 0.0.0.0'}

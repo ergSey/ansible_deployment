@@ -1,6 +1,6 @@
 ---
 # tasks file for initial_deployment
-- name: "Redis server configuration"
+- name: "Ubuntu Redis server configuration"
   lineinfile:
         dest: /etc/redis/redis.conf
         regexp: "{{ item.regexp }}"
@@ -8,3 +8,14 @@
         line: "{{ item.line }}"
   with_items: "{{ redis_configuration }}"
   notify: Restart redis.service
+  when: ansible_os_family == "Debian"
+
+- name: "Ubuntu Redis server configuration"
+  lineinfile:
+        dest: /etc/redis.conf
+        regexp: "{{ item.regexp }}"
+        insertafter: EOF
+        line: "{{ item.line }}"
+  with_items: "{{ redis_configuration }}"
+  notify: Restart redis.service
+  when: ansible_os_family == "RedHat"

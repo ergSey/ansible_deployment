@@ -10,10 +10,10 @@
   when: ansible_os_family == "Debian"
 
 - name: "Set RedHat network configuration"
-  community.general.nmcli:
+  nmcli:
     type: ethernet
-    ifname: "{{adapters.stdout_lines[1]}}"
-    ip4: "{{ip_add_priv}}"
-    gw4: "{{gw_priv}}"
+    conn_name: '{{adapters.stdout_lines[1]}}'
+    ip4: '{{ip_add_priv}}'
+#    gw4: '{{gw_priv}}'
     state: present
   when: ansible_os_family == "RedHat"

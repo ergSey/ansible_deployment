@@ -1,4 +1,10 @@
 ---
+    - name: Flush filter
+      iptables:
+        chain: "{{ item }}"
+        flush: yes
+      with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
+
     - name: Accept lo traffic
       iptables:
         in_interface: lo
@@ -23,7 +29,7 @@
 
     - name: Permissions for private network
       iptables:
-        in_interface: ens38
+        in_interface: "{{adapters.stdout_lines[1]}}"
         protocol: tcp
         chain: INPUT
         destination_port: "{{ item }}"
@@ -39,9 +45,19 @@
       with_items:
           - INPUT
           - FORWARD
-    - name: Save current state of the firewall in system file
+
+    - name: Save current state of the Ubuntu firewall in system file
       community.general.iptables_state:
         ip_version: ipv4
         table: filter
         state: saved
-        path: /etc/iptables/rules.v4    
+        path: /etc/iptables/rules.v4
+      when: ansible_os_family == "Debian"
+
+    - name: Save current state of the Redhat firewall in system file
+      community.general.iptables_state:
+        ip_version: ipv4
+        table: filter
+        state: saved
+        path: /etc/sysconfig/iptables
+      when: ansible_os_family == "RedHat"    
