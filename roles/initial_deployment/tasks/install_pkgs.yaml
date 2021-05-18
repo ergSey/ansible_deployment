@@ -1,0 +1,35 @@
+---
+# tasks file for initial_deployment
+
+- name: Install packages on Ubuntu
+  block:
+    - name: Install Ubuntu common packages
+      apt:
+       name: "{{ packages }}"
+       state: present
+       update_cache: True
+    - name: Install Ubuntu certain packages
+      apt:
+       name: ["redis-server", "iptables-persistent"]
+       state: present
+       update_cache: True
+  when: ansible_os_family == "Debian"
+
+- name: Install packages on Redhat
+  block:
+    - name: Install Redhat common packages
+      yum:
+       name: "{{ packages }}"
+       state: present
+       update_cache: True
+    - name: Install Redhat certain packages
+      yum:
+       name: ["redis", "iptables-services"]
+       state: present
+       update_cache: True
+    - name: Enable iptables-services
+      service:
+        name: iptables
+        state: started
+        enabled: yes
+  when: ansible_os_family == "RedHat"

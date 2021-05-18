@@ -1,0 +1,26 @@
+user www-data;
+
+events {}
+
+http {
+	include /etc/nginx/mime.types;
+
+        server {
+                listen 80;
+                server_name 192.168.59.161;
+		root /sites/wordpress;
+
+		index index.php index.html;
+
+		location / {
+			try_files $uri $uri/ /index.php?$args;
+                }
+
+		location ~ \.php$ {
+			include fastcgi_params;
+			include fastcgi.conf;
+
+			fastcgi_pass 127.0.0.1:9000;
+		}	
+	}
+}

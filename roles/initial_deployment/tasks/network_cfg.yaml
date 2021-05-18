@@ -1,0 +1,19 @@
+---
+# tasks file for initial_deployment
+- name: "Getting devices info"
+  shell: ip link | grep ens | cut -d':' -f 2 | sed -e 's/ //'
+  register: adapters
+
+- name: "Set Ubuntu network configuration"
+  template: src=00-installer-config.j2 dest={{dest_net_conf}} mode=644 owner=root group=root
+  notify: Apply network configuration
+  when: ansible_os_family == "Debian"
+
+- name: "Set RedHat network configuration"
+  nmcli:
+    type: ethernet
+    conn_name: '{{adapters.stdout_lines[1]}}'
+    ip4: '{{ip_add_priv}}'
+#    gw4: '{{gw_priv}}'
+    state: present
+  when: ansible_os_family == "RedHat"

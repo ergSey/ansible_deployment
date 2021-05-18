@@ -1,0 +1,6 @@
+---
+# vars file for initial_deployment
+# This file should be encrypted by ansible-vault in production
+
+mysql_root_password: "mysql_root_password"
+mysql_wordpressuser_password: "wordpressuser_password"

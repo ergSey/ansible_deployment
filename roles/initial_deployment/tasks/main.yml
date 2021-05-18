@@ -1,0 +1,11 @@
+---
+# tasks file for initial_deployment
+
+#- include: install_pkgs.yaml
+- include: nginx.yaml
+#- include: usr_create.yaml
+#- include: network_cfg.yaml
+#- include: sftp_cfg.yaml
+#- include: redis_cfg.yaml
+#- include: ipt_cfg.yaml
+

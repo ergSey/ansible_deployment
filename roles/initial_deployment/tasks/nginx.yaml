@@ -1,0 +1,67 @@
+---
+# tasks file for initial_deployment
+
+- name: Install LEMP Packages
+  apt: 
+   name: [ 'nginx', 'mysql-server', 'python3-pymysql', 'php-fpm', 'php-mysql', 'php-cgi' ] 
+   update_cache: True 
+   state: present
+
+- name: Mysql configuration 
+  block:
+    - name: Sets the root password    
+      mysql_user: 
+        name: root 
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      ignore_errors: yes
+
+    - name: Removes all anonymous user accounts
+      mysql_user:
+        name: ''
+        host_all: yes
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Removes the MySQL test database
+      mysql_db: 
+        name: test 
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    
+    - name: DB creating
+      mysql_db:
+        name: wordpress
+        state: present
+        encoding: utf8
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Create wordpress DB user
+      mysql_user:
+        name: wordpressuser
+        password: "{{ mysql_wordpressuser_password }}"
+        priv: 'wordpress.*:ALL,GRANT'
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+- name: WordPress deploying
+  block:
+    - name: site dir creation
+      file:
+        path: /sites
+        state: directory
+        mode: '0755'
+    
+    - name: Extract and copy the project
+      unarchive:
+        src: wordpress-5.7.2-ru_RU.tar.gz
+        dest: /sites/  
+
+- name: Setting up NGINX configuration
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf mode=755 owner=root group=root
+  notify: Reload NGINX configuration

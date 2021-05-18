@@ -1,0 +1,19 @@
+---
+# handlers file for initial_deployment
+- name: "Apply network configuration"
+  shell: netplan apply
+
+- name: "Restart sshd.service"
+  service:
+    name: sshd
+    state: restarted
+
+- name: "Restart redis.service"
+  service:
+    name: redis
+    state: restarted
+
+- name: "Reload NGINX configuration"
+  service:
+    name: nginx
+    state: reloaded

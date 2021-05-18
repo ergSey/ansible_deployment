@@ -1,0 +1,10 @@
+# This is the network config written by 'subiquity'
+network:
+  ethernets:
+    {{adapters.stdout_lines[0]}}:
+      dhcp4: true
+    {{adapters.stdout_lines[1]}}:
+      dhcp4: no
+      addresses: [{{ip_add_priv}}, ]
+      gateway4: {{gw_priv}}
+  version: 2
