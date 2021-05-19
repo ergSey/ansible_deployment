@@ -4,5 +4,5 @@
   become: True
 
   roles:
-    - { role: initial_deployment_debian, when: ansible_os_family == 'Debian'}
+    - { role: initial_deployment, when: ansible_os_family == 'Debian'}
     #- { role: initial_deployment_debian, when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'}
