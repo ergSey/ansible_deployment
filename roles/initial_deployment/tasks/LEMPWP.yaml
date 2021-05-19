@@ -1,0 +1,94 @@
+---
+# tasks file for initial_deployment
+
+- name: Install LEMP Packages
+  apt: 
+   name: [ 'nginx', 'mysql-server', 'python3-pymysql', 'php-fpm', 'php-mysql', 'php-cgi' ] 
+   update_cache: True 
+   state: present
+
+- name: Mysql configuration 
+  block:
+    - name: Set the root password    
+      mysql_user: 
+        name: root 
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      ignore_errors: yes
+
+    - name: Removes all anonymous user accounts
+      mysql_user:
+        name: ''
+        host_all: yes
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Removes the MySQL test database
+      mysql_db: 
+        name: test 
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    
+    - name: DB creating
+      mysql_db:
+        name: "{{ mysql_wordpress_DB }}"
+        state: present
+        encoding: utf8
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Create wordpress DB user
+      mysql_user:
+        name: "{{ mysql_wordpressuser }}"
+        password: "{{ mysql_wordpressuser_password }}"
+        priv: 'wordpress.*:ALL,GRANT'
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+- name: WordPress deploying
+  block:
+    - name: Site dir creation
+      file:
+        path: "{{ sites_repository }}"
+        state: directory
+        mode: '0755'
+    
+    - name: Extract and copy the project
+      unarchive:
+        src: wordpress-5.7.2-ru_RU.tar.gz
+        dest: "{{ sites_repository }}"  
+
+- name: Setting up NGINX configuration
+  template: src=nginx.conf.j2 dest="{{ nginx_cfg_path }}" mode=755 owner=root group=root
+  notify: Reload NGINX configuration
+
+- name: PHP-FPM configuration
+  lineinfile:
+        dest: "{{ php_fpm_cfg_path }}" 
+        regexp: '^listen = /run/php/php7.4-fpm.sock'
+        insertafter: '^listen = /run/php/php7.4-fpm.sock'
+        line: listen = {{ fastcgi_socket }}
+  notify: PHP-FPM restart
+
+- name: Setting up Wordpress configuration
+  template: src=wp-config.php.j2 dest="{{ wp_cfg_pass }}" mode=755 owner=root group=root
+
+- name: SSL dir creation
+  file:
+    path: /sites/ssl
+    state: directory
+    mode: '0755'
+
+- name: Copy SSL files
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+  - { src: 'ssl/dhparam.pem', dest: '/sites/ssl' }
+  - { src: 'ssl/nginx-selfsigned.crt', dest: '/sites/ssl' }
+  - { src: 'ssl/nginx-selfsigned.key', dest: '/sites/ssl' }
+  - { src: 'snippets/self_signed.conf', dest: '/etc/nginx/snippets' }
+  - { src: 'snippets/ssl_params.conf', dest: '/etc/nginx/snippets' }
+

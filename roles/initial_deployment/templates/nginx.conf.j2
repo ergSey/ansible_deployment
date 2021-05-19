@@ -1,4 +1,4 @@
-user www-data;
+user www-data www-data;
 
 events {}
 
@@ -6,11 +6,16 @@ http {
 	include /etc/nginx/mime.types;
 
         server {
-                listen 80;
-                server_name 192.168.59.161;
-		root /sites/wordpress;
+                listen {{ http_port }} ssl;
+                server_name {{ http_host }};
+		root {{ root_folder }};
 
 		index index.php index.html;
+
+		include snippets/self_signed.conf;
+		include snippets/ssl_params.conf;
+		
+		ssl_dhparam /sites/ssl/dhparam.pem;
 
 		location / {
 			try_files $uri $uri/ /index.php?$args;
@@ -20,7 +25,7 @@ http {
 			include fastcgi_params;
 			include fastcgi.conf;
 
-			fastcgi_pass 127.0.0.1:9000;
+			fastcgi_pass {{ fastcgi_socket }};
 		}	
 	}
 }

@@ -17,3 +17,8 @@
   service:
     name: nginx
     state: reloaded
+
+- name: "PHP-FPM restart"
+  service:
+    name: php7.4-fpm 
+    state: restarted

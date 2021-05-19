@@ -1,0 +1,20 @@
+---
+# vars file for initial_deployment
+# This file should be encrypted by ansible-vault in production
+
+mysql_root_password: "mysql_root_password"
+mysql_wordpress_DB: "wordpress"
+mysql_wordpressuser: "wordpressuser"
+mysql_wordpressuser_password: "wordpressuser_password"
+
+sites_repository: "/sites"
+nginx_cfg_path: "/etc/nginx/nginx.conf"
+php_fpm_cfg_path: "/etc/php/7.4/fpm/pool.d/www.conf"
+wp_cfg_pass: "/sites/wordpress/wp-config.php"
+
+http_host: "192.168.59.130"
+http_port: "443"
+fastcgi_socket: "127.0.0.1:9000"
+root_folder: "/sites/wordpress"
+
+
