@@ -83,7 +83,7 @@
     state: directory
     mode: '0755'
 
-- name: Copy SSL files
+- name: Copy SSL files, dhpasswd, phpinfo.php
   copy: src={{ item.src }} dest={{ item.dest }}
   with_items:
   - { src: 'ssl/dhparam.pem', dest: '/sites/ssl' }
@@ -91,4 +91,10 @@
   - { src: 'ssl/nginx-selfsigned.key', dest: '/sites/ssl' }
   - { src: 'snippets/self_signed.conf', dest: '/etc/nginx/snippets' }
   - { src: 'snippets/ssl_params.conf', dest: '/etc/nginx/snippets' }
+  - { src: '.htpasswd', dest: '/etc/nginx/' }
+  - { src: 'phpinfo.php', dest: '/sites/wordpress' }
+
+
+
+
 
